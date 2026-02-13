@@ -1,6 +1,8 @@
 import { Canvas } from '@react-three/fiber';
 import { Suspense } from 'react';
 import CameraController from './CameraController';
+import PolaroidGroup from './PolaroidGroup';
+import Particles from './Particles';
 import { useAppState } from '../hooks/useAppState';
 import { polaroids } from '../data/content';
 
@@ -28,6 +30,8 @@ export default function Scene() {
           <ambientLight intensity={0.6} color="#FFF5EE" />
           <pointLight position={[5, 5, 5]} intensity={0.8} color="#FFE4C9" />
           <pointLight position={[-5, -3, 3]} intensity={0.4} color="#E8D5C4" />
+          <PolaroidGroup />
+          <Particles />
           <CameraController />
         </Suspense>
       </Canvas>
