@@ -5,7 +5,7 @@ export default function FinalMessage() {
   const fadeIn = useSpring({
     from: { opacity: 0 },
     to: { opacity: 1 },
-    config: { duration: 2000 },
+    config: { duration: 2500 },
   });
 
   return (
@@ -23,20 +23,30 @@ export default function FinalMessage() {
         color: '#FEFEFA',
         padding: '2rem',
         textAlign: 'center',
+        zIndex: 10,
       }}
     >
-      <h2 style={{ fontSize: '2.5rem', marginBottom: '1.5rem', color: '#FFE4C9' }}>
+      <h2 style={{
+        fontSize: 'clamp(1.8rem, 6vw, 2.5rem)',
+        marginBottom: '1.5rem',
+        color: '#FFE4C9',
+      }}>
         {closingMessage.title}
       </h2>
       <p style={{
-        fontSize: '1.4rem',
+        fontSize: 'clamp(1.1rem, 3.5vw, 1.4rem)',
         maxWidth: '500px',
         lineHeight: 1.8,
         color: '#F5E6E0',
+        padding: '0 1rem',
       }}>
         {closingMessage.body}
       </p>
-      <p style={{ fontSize: '1.3rem', marginTop: '2rem', color: '#D4A88C' }}>
+      <p style={{
+        fontSize: 'clamp(1rem, 3vw, 1.3rem)',
+        marginTop: '2rem',
+        color: '#D4A88C',
+      }}>
         {closingMessage.signature}
       </p>
     </animated.div>

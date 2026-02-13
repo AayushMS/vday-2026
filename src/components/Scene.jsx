@@ -12,7 +12,7 @@ export default function Scene() {
   return (
     <>
       <Canvas
-        camera={{ position: [0, 0, 12], fov: 50, near: 0.1, far: 100 }}
+        camera={{ position: [0, 0, 18], fov: 50, near: 0.1, far: 100 }}
         dpr={[1, 2]}
         gl={{ antialias: true, alpha: false }}
         style={{
@@ -37,7 +37,14 @@ export default function Scene() {
       </Canvas>
 
       {state.showFinalPrompt && state.phase === 'exploring' && (
-        <div className="final-prompt" onClick={() => dispatch({ type: 'SHOW_CLOSING' })}>
+        <div
+          className="final-prompt"
+          onClick={() => dispatch({ type: 'SHOW_CLOSING' })}
+          onTouchEnd={(e) => {
+            e.preventDefault();
+            dispatch({ type: 'SHOW_CLOSING' });
+          }}
+        >
           <p>i have something to tell you...</p>
         </div>
       )}

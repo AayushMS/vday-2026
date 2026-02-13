@@ -45,12 +45,18 @@ export default function LandingPage() {
       }}
       onClick={handleEnter}
     >
-      <h1 style={{ fontSize: '3.5rem', color: '#5C4033', margin: 0, letterSpacing: '0.02em' }}>
+      <h1 style={{
+        fontSize: 'clamp(2.2rem, 8vw, 3.5rem)',
+        color: '#5C4033',
+        margin: 0,
+        letterSpacing: '0.02em',
+        padding: '0 1rem',
+      }}>
         {landingText.greeting}
       </h1>
       <animated.p style={{
         ...pulseStyle,
-        fontSize: '1.3rem',
+        fontSize: 'clamp(1rem, 3.5vw, 1.3rem)',
         color: '#8B7D75',
         marginTop: '2rem',
       }}>

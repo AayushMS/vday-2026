@@ -2,7 +2,7 @@ import { useRef, useState, useMemo } from 'react';
 import { useTexture, Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import * as THREE from 'three';
-import { useFrame } from '@react-three/fiber';
+import { useFrame, useThree } from '@react-three/fiber';
 import { useAppState } from '../hooks/useAppState';
 
 const AnimatedGroup = animated.group;
@@ -23,6 +23,7 @@ export default function Polaroid({ data, position, rotation, floatConfig }) {
   const groupRef = useRef();
   const innerRef = useRef();
   const { state, dispatch } = useAppState();
+  const { viewport } = useThree();
   const texture = useTexture(data.photo);
   const isSelected = state.selectedPolaroid === data.id;
   const isAnySelected = state.selectedPolaroid !== null;
@@ -32,9 +33,20 @@ export default function Polaroid({ data, position, rotation, floatConfig }) {
 
   const [hovered, setHovered] = useState(false);
 
-  // Float animation (applied to inner ref, disabled when selected)
+  // Bring selected polaroid closer on mobile (camera is further back)
+  const selectedZ = viewport.width < 7 ? 12 : 8;
+  const selectedScale = viewport.width < 7 ? 2.2 : 1.8;
+
+  // Float animation (applied to inner ref, reset when selected)
   useFrame(({ clock }) => {
-    if (!innerRef.current || isSelected) return;
+    if (!innerRef.current) return;
+    if (isSelected) {
+      // Smoothly reset float offset when selected
+      innerRef.current.position.y *= 0.9;
+      innerRef.current.rotation.x *= 0.9;
+      innerRef.current.rotation.z *= 0.9;
+      return;
+    }
     const t = clock.getElapsedTime();
     const { speed, amplitude, rotationAmplitude, offset } = floatConfig;
 
@@ -47,9 +59,9 @@ export default function Polaroid({ data, position, rotation, floatConfig }) {
   const springs = useSpring({
     posX: isSelected ? 0 : position[0],
     posY: isSelected ? 0 : position[1],
-    posZ: isSelected ? 8 : position[2],
+    posZ: isSelected ? selectedZ : position[2],
     rotY: isSelected && state.isFlipped ? Math.PI : 0,
-    scale: isSelected ? 1.8 : 1,
+    scale: isSelected ? selectedScale : 1,
     opacity: isAnySelected && !isSelected ? 0.3 : 1,
     config: { mass: 1, tension: 170, friction: 26 },
   });

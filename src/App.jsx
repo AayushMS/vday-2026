@@ -6,11 +6,12 @@ import './App.css';
 
 function AppContent() {
   const { state } = useAppState();
+  const showScene = state.phase !== 'landing';
 
   return (
     <div className="app-container">
       {(state.phase === 'landing' || state.phase === 'entering') && <LandingPage />}
-      {state.phase !== 'landing' && state.phase !== 'closing' && <Scene />}
+      {showScene && <Scene />}
       {state.phase === 'closing' && <FinalMessage />}
     </div>
   );
