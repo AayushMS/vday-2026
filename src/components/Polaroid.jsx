@@ -1,4 +1,4 @@
-import { useRef, useState, useMemo } from 'react';
+import { useRef, useState, useMemo, useEffect } from 'react';
 import { useTexture, Text } from '@react-three/drei';
 import { useSpring, animated } from '@react-spring/three';
 import * as THREE from 'three';
@@ -19,7 +19,7 @@ function getPolaroidDimensions(orientation) {
   return { photoW, photoH, cardW, cardH };
 }
 
-export default function Polaroid({ data, position, rotation, floatConfig }) {
+export default function Polaroid({ data, position, rotation, floatConfig, index = 0 }) {
   const groupRef = useRef();
   const innerRef = useRef();
   const { state, dispatch } = useAppState();
@@ -66,6 +66,34 @@ export default function Polaroid({ data, position, rotation, floatConfig }) {
     config: { mass: 1, tension: 170, friction: 26 },
   });
 
+  // Staggered entrance animation
+  const entranceSpring = useSpring({
+    scale: state.phase === 'exploring' || state.phase === 'viewing' ? 1 : 0,
+    config: { mass: 1, tension: 120, friction: 14 },
+    delay: index * 200,
+  });
+
+  // Typewriter caption reveal
+  const [visibleChars, setVisibleChars] = useState(0);
+
+  useEffect(() => {
+    if (isSelected && state.isFlipped) {
+      setVisibleChars(0);
+      const interval = setInterval(() => {
+        setVisibleChars(prev => {
+          if (prev >= data.caption.length) {
+            clearInterval(interval);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 40);
+      return () => clearInterval(interval);
+    } else {
+      setVisibleChars(0);
+    }
+  }, [isSelected, state.isFlipped, data.caption.length]);
+
   const handleClick = (e) => {
     e.stopPropagation();
     if (isSelected) {
@@ -84,7 +112,7 @@ export default function Polaroid({ data, position, rotation, floatConfig }) {
       position-y={springs.posY}
       position-z={springs.posZ}
       rotation-y={springs.rotY}
-      scale={springs.scale}
+      scale={springs.scale.to(s => s * entranceSpring.scale.get())}
     >
       <group
         ref={innerRef}
@@ -112,6 +140,20 @@ export default function Polaroid({ data, position, rotation, floatConfig }) {
           <animated.meshBasicMaterial map={texture} transparent opacity={springs.opacity} />
         </mesh>
 
+        {/* Date on front face (bottom-right of border) */}
+        {data.date && (
+          <Text
+            position={[dims.cardW / 2 - 0.15, -(dims.cardH / 2 - 0.15), CARD_DEPTH / 2 + 0.001]}
+            fontSize={0.08}
+            anchorX="right"
+            anchorY="middle"
+            color="#8B7D75"
+            font="/fonts/Caveat-Regular.ttf"
+          >
+            {data.date}
+          </Text>
+        )}
+
         {/* Caption on back face */}
         <group position={[0, 0, -(CARD_DEPTH / 2 + 0.001)]} rotation={[0, Math.PI, 0]}>
           <Text
@@ -123,7 +165,7 @@ export default function Polaroid({ data, position, rotation, floatConfig }) {
             color="#5C4033"
             font="/fonts/Caveat-Regular.ttf"
           >
-            {data.caption}
+            {data.caption.slice(0, visibleChars)}
           </Text>
         </group>
       </group>

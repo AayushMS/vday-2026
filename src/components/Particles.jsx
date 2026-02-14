@@ -1,11 +1,13 @@
 import { useRef, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
+import { useTexture } from '@react-three/drei';
 import * as THREE from 'three';
 
 const PARTICLE_COUNT = 80;
 
 export default function Particles() {
   const meshRef = useRef();
+  const heartTexture = useTexture('/textures/heart.png');
 
   const positions = useMemo(() => {
     const pos = new Float32Array(PARTICLE_COUNT * 3);
@@ -40,8 +42,9 @@ export default function Particles() {
         />
       </bufferGeometry>
       <pointsMaterial
-        color="#FFE4C9"
-        size={0.05}
+        map={heartTexture}
+        color="#FFB6C1"
+        size={0.08}
         transparent
         opacity={0.4}
         sizeAttenuation

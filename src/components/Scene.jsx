@@ -1,5 +1,6 @@
 import { Canvas } from '@react-three/fiber';
 import { Suspense } from 'react';
+import { EffectComposer, Bloom } from '@react-three/postprocessing';
 import CameraController from './CameraController';
 import PolaroidGroup from './PolaroidGroup';
 import Particles from './Particles';
@@ -34,7 +35,17 @@ export default function Scene() {
           <Particles />
           <CameraController />
         </Suspense>
+        <EffectComposer>
+          <Bloom
+            intensity={0.3}
+            luminanceThreshold={0.8}
+            luminanceSmoothing={0.9}
+            radius={0.8}
+          />
+        </EffectComposer>
       </Canvas>
+
+      <div className="vignette-overlay" />
 
       {state.showFinalPrompt && state.phase === 'exploring' && (
         <div

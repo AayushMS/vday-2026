@@ -44,6 +44,7 @@ export default function PolaroidGroup() {
           position={positions[i]}
           rotation={rotations[i]}
           floatConfig={getFloatConfig(i)}
+          index={i}
         />
       ))}
     </group>

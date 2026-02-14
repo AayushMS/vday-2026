@@ -22,6 +22,13 @@ export default function LandingPage() {
     config: { duration: 1500 },
   });
 
+  const floatStyle = useSpring({
+    from: { transform: 'translateY(0px)' },
+    to: { transform: 'translateY(-8px)' },
+    loop: { reverse: true },
+    config: { duration: 2000 },
+  });
+
   const handleEnter = useCallback(() => {
     if (state.phase === 'landing') {
       dispatch({ type: 'START_ENTER' });
@@ -45,7 +52,8 @@ export default function LandingPage() {
       }}
       onClick={handleEnter}
     >
-      <h1 style={{
+      <animated.h1 style={{
+        ...floatStyle,
         fontSize: 'clamp(2.2rem, 8vw, 3.5rem)',
         color: '#5C4033',
         margin: 0,
@@ -53,7 +61,7 @@ export default function LandingPage() {
         padding: '0 1rem',
       }}>
         {landingText.greeting}
-      </h1>
+      </animated.h1>
       <animated.p style={{
         ...pulseStyle,
         fontSize: 'clamp(1rem, 3.5vw, 1.3rem)',

@@ -32,3 +32,11 @@
   0%, 100% { opacity: 1; }
   50% { opacity: 0.5; }
 }
+
+.vignette-overlay {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(15, 10, 5, 0.4) 100%);
+}
