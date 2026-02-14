@@ -1,6 +1,6 @@
 import { useRef, useState, useMemo, useEffect } from 'react';
 import { useTexture, Text } from '@react-three/drei';
-import { useSpring, animated } from '@react-spring/three';
+import { useSpring, animated, to } from '@react-spring/three';
 import * as THREE from 'three';
 import { useFrame, useThree } from '@react-three/fiber';
 import { useAppState } from '../hooks/useAppState';
@@ -112,7 +112,7 @@ export default function Polaroid({ data, position, rotation, floatConfig, index 
       position-y={springs.posY}
       position-z={springs.posZ}
       rotation-y={springs.rotY}
-      scale={springs.scale.to(s => s * entranceSpring.scale.get())}
+      scale={to([springs.scale, entranceSpring.scale], (s, e) => s * e)}
     >
       <group
         ref={innerRef}
